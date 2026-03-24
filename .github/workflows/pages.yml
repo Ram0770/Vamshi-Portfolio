@@ -5,21 +5,23 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install dependencies
-        run: npm ci
-      - name: Build project
-        run: npm run build
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist
 
@@ -27,5 +29,4 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+      - uses: actions/deploy-pages@v1
